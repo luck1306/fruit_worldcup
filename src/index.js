@@ -2,22 +2,32 @@ const leftImage = document.getElementById('leftImage');
 const rightImage = document.getElementById('rightImage');
 const p = document.querySelector("p") ,h1 = document.querySelector("h1");
 
-let fruitList = ['commonfig','strawberry' ,'tomato','pear','blueberry', 'apple', 'banana', 'melon'], semifinalList = [], finalList = new Array;
-let random_left, random_right, left_fruit, right_fruit, count = 0, semicount = 0 , favorite , left, right;
+let fruitList = ['commonfig','strawberry' ,'tomato','pear','blueberry', 'apple', 'banana', 'melon'], semifinalList = [], finalList = [''];
+let random_left, random_right, left_fruit, right_fruit, count = 0, semicount = 0 , favorite;
 
 random_number_friut(fruitList);
 
 
 leftImage.addEventListener('click', () => { // 왼쪽 눌렀을 때
-    favorite = left;
+    favorite = left_fruit;
     console.log(favorite);
-    compare(left_fruit);
+    if (finalList === undefined){
+        end();
+    }
+    else{
+        compare(left_fruit);
+    }
 });
 
 rightImage.addEventListener('click', () => { // 오른쪽 눌렀을 때
-    favorite = right;
+    favorite = right_fruit;
     console.log(favorite);
-    compare(right_fruit);
+    if (finalList === undefined){
+        end();
+    }
+    else{
+        compare(right_fruit);
+    }
 });
 
 function randomFruit(min, max) { // 최솟값과 최댓값을 받아 그 사이의 무작위의 수를 내는 함수
@@ -51,32 +61,40 @@ function semifinal() {
 
 
 function final() {
+    delete_undefined(finalList);
     p.innerHTML = '결승';
     console.log("final");
     console.log(finalList)
     random_number_friut(finalList);
-    while (left_fruit == undefined && right_fruit == undefined) {
-        random_number_friut;
-    }
+}
 
+function delete_undefined(list) {
+    for (i in list){
+        if (list[i] == undefined)
+            list.splice(i,1);
+    }
+}
+
+function end() {
+    h1.innerHTML = `${favorite}이 당신이 가장 좋아하는 과일입니다.`;
+    leftImage.src = `./fruitPicture/${favorite}.jpg`;
+    rightImage.src = `./fruitPicture/${favorite}.jpg`;
 }
 
 function compare (fruit) {
     if (count >= 4) {
-        if (semicount >= 3){
+        if (semicount > 2){
             final();
-            h1.innerHTML = `${favorite}이 당신이 가장 좋아하는 과일입니다.`;
         }
         else {
             finalList[semicount++] = fruit;
             console.log(semifinalList);
             semifinal();
-            if (semicount >= 3) {compare(left_fruit)};
+            if (semicount > 2) {compare(left_fruit)};
         }
     }
     else {
-        semifinalList[count] = fruit;
-        count += 1;
+        semifinalList[count++] = fruit;
         console.log(semifinalList);
         console.log(count);
         random_number_friut(fruitList);
