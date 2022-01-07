@@ -3,7 +3,7 @@ const rightImage = document.getElementById('rightImage');
 const p = document.querySelector("p") ,h1 = document.querySelector("h1");
 
 let fruitList = ['commonfig','strawberry' ,'tomato','pear','blueberry', 'apple', 'banana', 'melon'], semifinalList = [], finalList = [''];
-let random_left, random_right, left_fruit, right_fruit, count = 0, semicount = 0 , favorite;
+let random_left, random_right, left_fruit, right_fruit, count = 0, semicount = 0 , favorite, final_check = 0;
 
 random_number_friut(fruitList);
 
@@ -11,23 +11,13 @@ random_number_friut(fruitList);
 leftImage.addEventListener('click', () => { // 왼쪽 눌렀을 때
     favorite = left_fruit;
     console.log(favorite);
-    if (finalList === undefined){
-        end();
-    }
-    else{
-        compare(left_fruit);
-    }
+    compare(left_fruit);
 });
 
 rightImage.addEventListener('click', () => { // 오른쪽 눌렀을 때
     favorite = right_fruit;
     console.log(favorite);
-    if (finalList === undefined){
-        end();
-    }
-    else{
-        compare(right_fruit);
-    }
+    compare(right_fruit);
 });
 
 function randomFruit(min, max) { // 최솟값과 최댓값을 받아 그 사이의 무작위의 수를 내는 함수
@@ -39,12 +29,10 @@ function randomFruit(min, max) { // 최솟값과 최댓값을 받아 그 사이�
 function random_number_friut(list) { // 왼쪽 그림과 오른쪽 그림의 서로 다른 무작위의 수를 선택하고 그 값에 맞는 사진을 불러오는 함수
     random_left = randomFruit(0,list.length-1); 
     left_fruit = list[random_left];
-    //left = list[random_left];
     list.splice(random_left, 1);
     
     random_right = randomFruit(0,list.length-1);
     right_fruit = list[random_right];
-    //right = list[random_right];
     list.splice(random_right, 1);
 
     leftImage.src = `./fruitPicture/${left_fruit}.jpg`;
@@ -66,6 +54,7 @@ function final() {
     console.log("final");
     console.log(finalList)
     random_number_friut(finalList);
+    final_check = 1;
 }
 
 function delete_undefined(list) {
@@ -75,16 +64,22 @@ function delete_undefined(list) {
     }
 }
 
-function end() {
-    h1.innerHTML = `${favorite}이 당신이 가장 좋아하는 과일입니다.`;
-    leftImage.src = `./fruitPicture/${favorite}.jpg`;
-    rightImage.src = `./fruitPicture/${favorite}.jpg`;
-}
-
 function compare (fruit) {
     if (count >= 4) {
         if (semicount > 2){
-            final();
+            if (fruit == left_fruit){
+                if (final_check == 1) {
+                    rightImage.style.display='none';
+                }
+            }
+            else if (fruit == right_fruit){
+                if (final_check == 1) {
+                    leftImage.style.display='none';
+                }
+            }
+            if(final_check == 0){
+                final();
+            }
         }
         else {
             finalList[semicount++] = fruit;
